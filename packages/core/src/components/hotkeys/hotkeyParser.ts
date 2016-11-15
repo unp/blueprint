@@ -210,6 +210,13 @@ const normalizeKeyCode = (e: KeyboardEvent) => {
 };
 
 /**
+ * Converts a key combo to a string representation.
+ */
+export const keyComboToString = (combo: IKeyCombo): string => {
+    return combo.modifiers + " " + combo.key;
+};
+
+/**
  * Converts a keyboard event into a valid combo prop string
  */
 export const getKeyComboString = (e: KeyboardEvent): string => {

@@ -7,7 +7,7 @@ import { safeInvoke } from "../../common/utils";
 import { Children, ReactElement, ReactNode } from "react";
 
 import { Hotkey, IHotkeyProps } from "./hotkey";
-import { IKeyCombo, comboMatches, getKeyCombo, parseKeyCombo } from "./hotkeyParser";
+import { IKeyCombo, comboMatches, getKeyCombo, keyComboToString, parseKeyCombo } from "./hotkeyParser";
 import { IHotkeysProps } from "./hotkeys";
 import { isHotkeysDialogShowing, showHotkeysDialog } from "./hotkeysDialog";
 
@@ -21,6 +21,12 @@ export enum HotkeyScope {
 export interface IHotkeyAction {
     combo: IKeyCombo;
     props: IHotkeyProps;
+}
+
+export interface IHotkeysSeenEventExtension {
+    hotkeysSeen: {
+        [key: string]: boolean;
+    };
 }
 
 export class HotkeysEvents {
@@ -50,7 +56,11 @@ export class HotkeysEvents {
         this.actions = actions;
     }
 
-    public handleKeyDown = (e: KeyboardEvent) => {
+    public handleKeyDown = (e: KeyboardEvent & IHotkeysSeenEventExtension) => {
+        if (e.hotkeysSeen == null) {
+            e.hotkeysSeen = {};
+        }
+
         if (this.isTextInput(e) || isHotkeysDialogShowing()) {
             return;
         }
@@ -63,23 +73,42 @@ export class HotkeysEvents {
         }
 
         for (const action of this.actions) {
-            if (comboMatches(action.combo, combo)) {
+            const comboString = keyComboToString(action.combo);
+            const hasSeenHotkey = e.hotkeysSeen[comboString];
+
+            if (comboMatches(action.combo, combo) && !hasSeenHotkey) {
                 safeInvoke(action.props.onKeyDown, e);
             }
         }
+
+        // notify parent scopes that a hotkey callback was already triggered at this level
+        const comboString = keyComboToString(combo);
+        e.hotkeysSeen[comboString] = true;
     }
 
-    public handleKeyUp = (e: KeyboardEvent) => {
+    public handleKeyUp = (e: KeyboardEvent & IHotkeysSeenEventExtension) => {
         if (this.isTextInput(e) || isHotkeysDialogShowing()) {
             return;
         }
 
+        if (e.hotkeysSeen == null) {
+            e.hotkeysSeen = {};
+        }
+
         const combo = getKeyCombo(e);
+
         for (const action of this.actions) {
-            if (comboMatches(action.combo, combo)) {
+            const comboString = keyComboToString(action.combo);
+            const hasSeenHotkey = e.hotkeysSeen[comboString];
+
+            if (comboMatches(action.combo, combo) && !hasSeenHotkey) {
                 safeInvoke(action.props.onKeyUp, e);
             }
         }
+
+        // notify parent scopes that a hotkey callback was already triggered at this level
+        const comboString = keyComboToString(combo);
+        e.hotkeysSeen[comboString] = true;
     }
 
     private isScope(props: IHotkeyProps) {

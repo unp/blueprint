@@ -17,6 +17,12 @@ export function areEqual(date1: Date, date2: Date) {
     }
 }
 
+export function areRangesEqual(dateRange1: DateRange, dateRange2: DateRange) {
+    const [startDate1, endDate1] = dateRange1;
+    const [startDate2, endDate2] = dateRange2;
+    return areEqual(startDate1, startDate2) && areEqual(endDate1, endDate2);
+}
+
 export function areSameDay(date1: Date, date2: Date) {
     return date1 != null
         && date2 != null

@@ -207,7 +207,6 @@ export class Popover extends AbstractComponent<IPopoverProps, IPopoverState> {
 
     public displayName = "Blueprint.Popover";
 
-    private hasDarkParent = false;
     // a flag that is set to true while we are waiting for the underlying Portal to complete rendering
     private isContentMounting = false;
     private cancelOpenTimeout: () => void;
@@ -368,13 +367,20 @@ export class Popover extends AbstractComponent<IPopoverProps, IPopoverState> {
             targetWidth: this.targetElement.clientWidth,
         });
         if (!this.props.inline) {
-            this.hasDarkParent = this.targetElement.closest(`.${Classes.DARK}`) != null;
             this.updateTether();
         }
     }
 
     private renderPopover() {
         const { inline, interactionKind } = this.props;
+
+        // it's a little messy to do this check during the render process, but if we do
+        // this only on componentDidUpdate and/or componentDidMount, there's potential for
+        // race conditions that cause the dark theme to be applied incorrectly (see #163).
+        const hasDarkParent = (this.targetElement != null)
+            ? this.targetElement.closest(`.${Classes.DARK}`) != null
+            : false;
+
         let popoverHandlers: React.HTMLAttributes<HTMLDivElement> = {
             // always check popover clicks for dismiss class
             onClick: this.handlePopoverClick,
@@ -388,7 +394,7 @@ export class Popover extends AbstractComponent<IPopoverProps, IPopoverState> {
         const positionClasses = TetherUtils.getAttachmentClasses(this.props.position).join(" ");
         const containerClasses = classNames(Classes.TRANSITION_CONTAINER, { [positionClasses]: inline });
         const popoverClasses = classNames(Classes.POPOVER, {
-            [Classes.DARK]: this.props.inheritDarkTheme && this.hasDarkParent && !inline,
+            [Classes.DARK]: this.props.inheritDarkTheme && hasDarkParent && !inline,
         }, this.props.popoverClassName);
 
         const styles = this.getArrowPositionStyles();

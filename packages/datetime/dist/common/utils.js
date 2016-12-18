@@ -1,0 +1,37 @@
+/*
+ * Copyright 2015 Palantir Technologies, Inc. All rights reserved.
+ * Licensed under the BSD-3 License as modified (the “License”); you may obtain a copy
+ * of the license at https://github.com/palantir/blueprint/blob/master/LICENSE
+ * and https://github.com/palantir/blueprint/blob/master/PATENTS
+ */
+"use strict";
+/**
+ * Measure width of a string displayed with styles provided by `className`.
+ * Should only be used if measuring can't be done with existing DOM elements.
+ */
+function measureTextWidth(text, className, containerElement) {
+    if (className === void 0) { className = ""; }
+    if (containerElement === void 0) { containerElement = document.body; }
+    var span = document.createElement("span");
+    span.classList.add(className);
+    span.innerHTML = text;
+    containerElement.appendChild(span);
+    var spanWidth = span.offsetWidth;
+    span.remove();
+    return spanWidth + "px";
+}
+exports.measureTextWidth = measureTextWidth;
+function padWithZeroes(str, minLength) {
+    if (str.length < minLength) {
+        return "" + stringRepeat("0", minLength - str.length) + str;
+    }
+    else {
+        return str;
+    }
+}
+exports.padWithZeroes = padWithZeroes;
+function stringRepeat(str, numTimes) {
+    return new Array(numTimes + 1).join(str);
+}
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uL3NyYy9jb21tb24vdXRpbHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7O0dBS0c7O0FBRUg7OztHQUdHO0FBQ0gsMEJBQWlDLElBQVksRUFBRSxTQUFjLEVBQUUsZ0JBQWdDO0lBQWhELHlCQUFjLEdBQWQsY0FBYztJQUFFLGdDQUFnQyxHQUFoQyxtQkFBbUIsUUFBUSxDQUFDLElBQUk7SUFDM0YsSUFBTSxJQUFJLEdBQUcsUUFBUSxDQUFDLGFBQWEsQ0FBQyxNQUFNLENBQUMsQ0FBQztJQUM1QyxJQUFJLENBQUMsU0FBUyxDQUFDLEdBQUcsQ0FBQyxTQUFTLENBQUMsQ0FBQztJQUM5QixJQUFJLENBQUMsU0FBUyxHQUFHLElBQUksQ0FBQztJQUV0QixnQkFBZ0IsQ0FBQyxXQUFXLENBQUMsSUFBSSxDQUFDLENBQUM7SUFDbkMsSUFBTSxTQUFTLEdBQUcsSUFBSSxDQUFDLFdBQVcsQ0FBQztJQUNuQyxJQUFJLENBQUMsTUFBTSxFQUFFLENBQUM7SUFFZCxNQUFNLENBQUMsU0FBUyxHQUFHLElBQUksQ0FBQztBQUM1QixDQUFDO0FBVmUsd0JBQWdCLG1CQVUvQixDQUFBO0FBRUQsdUJBQThCLEdBQVcsRUFBRSxTQUFpQjtJQUN4RCxFQUFFLENBQUMsQ0FBQyxHQUFHLENBQUMsTUFBTSxHQUFHLFNBQVMsQ0FBQyxDQUFDLENBQUM7UUFDekIsTUFBTSxDQUFDLEtBQUcsWUFBWSxDQUFDLEdBQUcsRUFBRSxTQUFTLEdBQUcsR0FBRyxDQUFDLE1BQU0sQ0FBQyxHQUFHLEdBQUssQ0FBQztJQUNoRSxDQUFDO0lBQUMsSUFBSSxDQUFDLENBQUM7UUFDSixNQUFNLENBQUMsR0FBRyxDQUFDO0lBQ2YsQ0FBQztBQUNMLENBQUM7QUFOZSxxQkFBYSxnQkFNNUIsQ0FBQTtBQUVELHNCQUFzQixHQUFXLEVBQUUsUUFBZ0I7SUFDL0MsTUFBTSxDQUFDLElBQUksS0FBSyxDQUFDLFFBQVEsR0FBRyxDQUFDLENBQUMsQ0FBQyxJQUFJLENBQUMsR0FBRyxDQUFDLENBQUM7QUFDN0MsQ0FBQyIsImZpbGUiOiJjb21tb24vdXRpbHMuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogQ29weXJpZ2h0IDIwMTUgUGFsYW50aXIgVGVjaG5vbG9naWVzLCBJbmMuIEFsbCByaWdodHMgcmVzZXJ2ZWQuXG4gKiBMaWNlbnNlZCB1bmRlciB0aGUgQlNELTMgTGljZW5zZSBhcyBtb2RpZmllZCAodGhlIOKAnExpY2Vuc2XigJ0pOyB5b3UgbWF5IG9idGFpbiBhIGNvcHlcbiAqIG9mIHRoZSBsaWNlbnNlIGF0IGh0dHBzOi8vZ2l0aHViLmNvbS9wYWxhbnRpci9ibHVlcHJpbnQvYmxvYi9tYXN0ZXIvTElDRU5TRVxuICogYW5kIGh0dHBzOi8vZ2l0aHViLmNvbS9wYWxhbnRpci9ibHVlcHJpbnQvYmxvYi9tYXN0ZXIvUEFURU5UU1xuICovXG5cbi8qKlxuICogTWVhc3VyZSB3aWR0aCBvZiBhIHN0cmluZyBkaXNwbGF5ZWQgd2l0aCBzdHlsZXMgcHJvdmlkZWQgYnkgYGNsYXNzTmFtZWAuXG4gKiBTaG91bGQgb25seSBiZSB1c2VkIGlmIG1lYXN1cmluZyBjYW4ndCBiZSBkb25lIHdpdGggZXhpc3RpbmcgRE9NIGVsZW1lbnRzLlxuICovXG5leHBvcnQgZnVuY3Rpb24gbWVhc3VyZVRleHRXaWR0aCh0ZXh0OiBzdHJpbmcsIGNsYXNzTmFtZSA9IFwiXCIsIGNvbnRhaW5lckVsZW1lbnQgPSBkb2N1bWVudC5ib2R5KSB7XG4gICAgY29uc3Qgc3BhbiA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoXCJzcGFuXCIpO1xuICAgIHNwYW4uY2xhc3NMaXN0LmFkZChjbGFzc05hbWUpO1xuICAgIHNwYW4uaW5uZXJIVE1MID0gdGV4dDtcblxuICAgIGNvbnRhaW5lckVsZW1lbnQuYXBwZW5kQ2hpbGQoc3Bhbik7XG4gICAgY29uc3Qgc3BhbldpZHRoID0gc3Bhbi5vZmZzZXRXaWR0aDtcbiAgICBzcGFuLnJlbW92ZSgpO1xuXG4gICAgcmV0dXJuIHNwYW5XaWR0aCArIFwicHhcIjtcbn1cblxuZXhwb3J0IGZ1bmN0aW9uIHBhZFdpdGhaZXJvZXMoc3RyOiBzdHJpbmcsIG1pbkxlbmd0aDogbnVtYmVyKSB7XG4gICAgaWYgKHN0ci5sZW5ndGggPCBtaW5MZW5ndGgpIHtcbiAgICAgICAgcmV0dXJuIGAke3N0cmluZ1JlcGVhdChcIjBcIiwgbWluTGVuZ3RoIC0gc3RyLmxlbmd0aCl9JHtzdHJ9YDtcbiAgICB9IGVsc2Uge1xuICAgICAgICByZXR1cm4gc3RyO1xuICAgIH1cbn1cblxuZnVuY3Rpb24gc3RyaW5nUmVwZWF0KHN0cjogc3RyaW5nLCBudW1UaW1lczogbnVtYmVyKSB7XG4gICAgcmV0dXJuIG5ldyBBcnJheShudW1UaW1lcyArIDEpLmpvaW4oc3RyKTtcbn1cbiJdLCJzb3VyY2VSb290IjoiL3NvdXJjZS8ifQ==

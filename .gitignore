@@ -22,5 +22,5 @@ lerna-debug.log
 # Blueprint
 build
 # dist
-generated
+# generated
 coverage

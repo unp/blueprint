@@ -91,7 +91,7 @@ export class Toaster extends AbstractComponent<IToasterProps, IToasterState> imp
     public static create(props?: IToasterProps, container = document.body): IToaster {
         const containerElement = document.createElement("div");
         container.appendChild(containerElement);
-        return ReactDOM.render(<Toaster {...props} inline /> , containerElement) as Toaster;
+        return ReactDOM.render(<Toaster {...props} /> , containerElement) as Toaster;
     }
 
     public state = {
